@@ -94,7 +94,7 @@ router.post('/sign-up', async (req, res) => {
   // ------------------------------ Whishlist ------------------------------ //
   // find(+ filtre par le token) en BDD 
   // Affichage des portefeuilles en front
-  router.get('/whishlist', async (req, res) => {
+  router.get('/wishlist', async (req, res) => {
 
     var portofolios = []
     var user = await userModel.findOne({token: req.query.token})
@@ -196,3 +196,23 @@ router.post('/sign-up', async (req, res) => {
 
 
 module.exports = router;
+
+
+
+
+
+router.get('/introduction', async function(req, res){
+  var result = false
+  var username;  
+  var user = await userModel.findOne({token: req.query.token})
+  
+    if(user != null){
+     
+      username = user.username
+
+      result = true
+      
+    }
+    console.log("--------------------------Username:-----------------------------", username)
+  res.json({result, username})
+})
