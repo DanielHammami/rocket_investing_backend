@@ -51,10 +51,10 @@ router.post('/sign-up', async (req, res) => {
       token = saveUser.token
     }
   }
-  
+
   res.json({result, saveUser, error, token})
   });
-  
+
   // ------------------------------- Sign-In ------------------------------- //
   // req.body.userName = john
   // req.body.password = ***********
@@ -66,14 +66,14 @@ router.post('/sign-up', async (req, res) => {
     var user = null
     var error = []
     var token = null
-    
+
     if(req.body.usernameFromFront == '' || req.body.passwordFromFront == ''){
       error.push('champs vides')
     }
-  
+
     if(error.length == 0){
       const user = await userModel.findOne({username: req.body.usernameFromFront,})
-    
+
       if(user){
         if(bcrypt.compareSync(req.body.passwordFromFront, user.password)){
           result = true
@@ -87,18 +87,18 @@ router.post('/sign-up', async (req, res) => {
         error.push('email incorrect')
       }
     }
-    
+
     res.json({result, user, error, token})
   });
-  
+
   // ------------------------------ Whishlist ------------------------------ //
-  // find(+ filtre par le token) en BDD 
+  // find(+ filtre par le token) en BDD
   // Affichage des portefeuilles en front
   router.get('/wishlist', async (req, res) => {
 
     var portofolios = []
     var user = await userModel.findOne({token: req.query.token})
-    
+
     if(user != null){
       if(user.portofoliosId != null){
         portofolios = await userModel.findOne({token: req.query.token})
@@ -107,9 +107,9 @@ router.post('/sign-up', async (req, res) => {
         // populate() pour lire les propriétés de portofoliosId
       } else {
         portofolios = "Aucun portefeuille enregistré"
-      } 
+      }
     }
-  
+
     res.json({portofolios}) // pour affichage des portefeuilles dans "Mes favoris"
   })
 
@@ -122,7 +122,7 @@ router.post('/sign-up', async (req, res) => {
     // console.log(req.body._idFront)
 
     var user = await userModel.findOne({token: req.body.token})
-    
+
     if(user != null){
       user.portofoliosId.push({_id: req.body._idFront})
       // _id = objectId du portefeuille sélectionné
@@ -142,43 +142,42 @@ router.post('/sign-up', async (req, res) => {
   router.delete('/wishlist/:position', async function(req,res){
     var result = false
     var user = await userModel.findOne({token: req.body.token})
-  
+
     if(user != null){
       user.portofoliosId.splice(req.params.position,1)
       // utilisation des params pour renvoyer la position du portofolioId
       // à supprimer dans le tableau.
 
       var userSave = await user.save()
-  
+
       if(userSave.username){
         result = true
       }
     }
-  
+
     res.json({result})
   })
 
-  
+
   // ------------------------------- Strategy ------------------------------- //
   // req.query/body?.value (select)
   // find(filtre stratégie: active ou passive) en BDD
   // Affichage des portefeuilles actif ou passif en front
-  router.get('/strategy', async (req, res) => {
-
-    var strategys = []
-    var strategy = await portofolioModel.find({strategy: req.query.strategy})
+  router.post('/strategy', async (req, res) => {
+    var strategyData = await portofolioModel.find({ strategy: req.body.strategy })
+    console.log(strategyData)
     // req.query.stratgy provenant du SELECT(input)
     // retour de 3 schémas ==> ACTIVE / PASSIVE
-    
-    if(strategy != null){
-      strategys = strategy
-    } else {
-      strategys = "Aucune stratégie disponible"
-    }
-  
-    res.json({strategys}) // pour affichage des portefeuilles dans "Stratégie Active/passive"
+
+    // if(strategy !== null){
+    //   strategys = strategy
+    // } else {
+    //   strategys = "Aucune stratégie disponible"
+    // }
+
+    res.json({ strategyData }) // pour affichage des portefeuilles dans "Stratégie Active/passive"
   })
-  
+
   // ------------------------------- Portofolio ------------------------------- //
   // find(filtre selection portofolio) en BDD
   // Affichage des données page 08 à 11
@@ -189,13 +188,13 @@ router.post('/sign-up', async (req, res) => {
     var portofolio = await portofolioModel.findOne({name: "60/40"})
     // req.query.name provenant du nom du portefeuille sélectionné
     // console.log("portofolio:", portofolio)
-    
+
     if(portofolio != null){
       portofolios = portofolio
     } else {
       portofolios = "Aucun portefeuille disponible"
     }
-  
+
     res.json({portofolios}) // pour affichage des détails du portefeuille
   })
 
@@ -208,15 +207,15 @@ module.exports = router;
 
 router.get('/introduction', async function(req, res){
   var result = false
-  var username;  
+  var username;
   var user = await userModel.findOne({token: req.query.token})
-  
+
     if(user != null){
-     
+
       username = user.username
 
       result = true
-      
+
     }
     console.log("--------------------------Username:-----------------------------", username)
   res.json({result, username})
