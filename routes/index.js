@@ -99,22 +99,19 @@ router.post('/sign-up', async (req, res) => {
     var username; 
     var portofolios = "Aucun portefeuille enregistré"
     var user = await userModel.findOne({token: req.query.token})
+    console.log("--------------------------User:-----------------------------", user.portofoliosId)
     
-
-    console.log("--------------------------User:-----------------------------", user)
     if(user != null){
-      if(user.portofoliosId != null ){
-        // portofolios = await userModel.findOne({token: req.query.token})
-        //                                       .populate(portofoliosId)
-        //                                       .exec()
-      //  console.log("--------------------------Portofolios:-----------------------------", portofolios)
+      username = user.username
+
+      if(user.portofoliosId.length >= 1){
+        portofolios = await userModel.findOne({token: req.query.token})
+                                              .populate('portofoliosId')
+                                              .exec()
         // populate() pour lire les propriétés de portofoliosId
-        username = user.username
         result = true
-      } }
-    // } else {
-    //   portofolios = "Aucun portefeuille enregistré"
-    // } 
+      } 
+    }
   
     res.json({portofolios, result, username}) // pour affichage des portefeuilles dans "Mes favoris"
   })
@@ -123,7 +120,7 @@ router.post('/sign-up', async (req, res) => {
   // db.contacts.insert({ first: 'Quentin', last: 'Busuttil' })
   router.post('/wishlist', async function(req, res){
     var result = false
-
+    var userName;
     // console.log(req.body.token)
     // console.log(req.body._idFront)
 
@@ -137,10 +134,11 @@ router.post('/sign-up', async (req, res) => {
 
       if(userSave.username){
         result = true
+        userName = userSave.username
       }
     }
 
-    res.json({result})
+    res.json({result, userName})
   })
 
   // # effacer un document
