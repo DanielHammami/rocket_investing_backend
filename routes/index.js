@@ -91,26 +91,32 @@ router.post('/sign-up', async (req, res) => {
     res.json({result, user, error, token})
   });
   
-  // ------------------------------ Whishlist ------------------------------ //
+  // ------------------------------ Wishlist ------------------------------ //
   // find(+ filtre par le token) en BDD 
   // Affichage des portefeuilles en front
   router.get('/wishlist', async (req, res) => {
-
-    var portofolios = []
+    var result = false
+    var username; 
+    var portofolios = "Aucun portefeuille enregistré"
     var user = await userModel.findOne({token: req.query.token})
     
+
+    console.log("--------------------------User:-----------------------------", user)
     if(user != null){
-      if(user.portofoliosId != null){
-        portofolios = await userModel.findOne({token: req.query.token})
-                                              .populate(portofoliosId)
-                                              .exec()
+      if(user.portofoliosId != null ){
+        // portofolios = await userModel.findOne({token: req.query.token})
+        //                                       .populate(portofoliosId)
+        //                                       .exec()
+      //  console.log("--------------------------Portofolios:-----------------------------", portofolios)
         // populate() pour lire les propriétés de portofoliosId
-      } else {
-        portofolios = "Aucun portefeuille enregistré"
-      } 
-    }
+        username = user.username
+        result = true
+      } }
+    // } else {
+    //   portofolios = "Aucun portefeuille enregistré"
+    // } 
   
-    res.json({portofolios}) // pour affichage des portefeuilles dans "Mes favoris"
+    res.json({portofolios, result, username}) // pour affichage des portefeuilles dans "Mes favoris"
   })
 
   // # insertion
@@ -200,24 +206,21 @@ router.post('/sign-up', async (req, res) => {
   })
 
 
-module.exports = router;
-
-
-
-
+  // ------------------------------- introduction ------------------------------- //
 
 router.get('/introduction', async function(req, res){
   var result = false
   var username;  
+  // console.log("--------------------------req.query.token:-----------------------------", req.query.token)
   var user = await userModel.findOne({token: req.query.token})
   
     if(user != null){
-     
       username = user.username
-
       result = true
-      
     }
-    console.log("--------------------------Username:-----------------------------", username)
-  res.json({result, username})
+
+    // console.log("--------------------------Username:-----------------------------", username)
+  res.json({result, username}) // le result a un intérêt pour la mise en place de la sécurté//
 })
+
+module.exports = router;
