@@ -164,33 +164,19 @@ router.post('/sign-up', async (req, res) => {
 
 
   // ------------------------------- Strategy ------------------------------- //
-  // req.query/body?.value (select)
-  // find(filtre stratégie: active ou passive) en BDD
-  // Affichage des portefeuilles actif ou passif en front
+
   router.post('/strategy', async (req, res) => {
     var strategyFomFrontend = req.body.strategy
-    var profilFromFrontend = req.body.profilType
+    var profilFromFrontend = req.body.profil
 
-    var strategyData = await portofolioModel.find({ strategy: strategyFomFrontend })
-    var strategyName = []
-    //console.log('strategy => ', strategyFomFrontend)
-    console.log('profil => ', profilFromFrontend)
+    var strategyData = await portofolioModel.find({
+      strategy: strategyFomFrontend,
+      risk: profilFromFrontend
+    })
 
-    for (var i = 0; i < strategyData.length; i += 1) {
-      //console.log('name => ', strategyData)
-    }
+    var data = strategyData[0].name
 
-    //console.log(strategyData)
-    // req.query.stratgy provenant du SELECT(input)
-    // retour de 3 schémas ==> ACTIVE / PASSIVE
-
-    // if(strategy !== null){
-    //   strategys = strategy
-    // } else {
-    //   strategys = "Aucune stratégie disponible"
-    // }
-
-    res.json({ strategyData }) // pour affichage des portefeuilles dans "Stratégie Active/passive"
+    res.json({ data })
   })
 
   // ------------------------------- Portofolio ------------------------------- //
