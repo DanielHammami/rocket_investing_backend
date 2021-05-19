@@ -99,7 +99,7 @@ router.post('/sign-up', async (req, res) => {
     var username; 
     var portofolios = "Aucun portefeuille enregistré"
     var user = await userModel.findOne({token: req.query.token})
-    console.log("--------------------------User:-----------------------------", user.portofoliosId)
+    // console.log("--------------------------User:-----------------------------", user.portofoliosId)
     
     if(user != null){
       username = user.username
@@ -143,17 +143,17 @@ router.post('/sign-up', async (req, res) => {
 
   // # effacer un document
   // db.contacts.remove({ _id: ObjectId("55accc6c039c97c5db42f192") })
-  router.delete('/wishlist/:position', async function(req,res){
+  router.delete('/wishlist', async function(req,res){
     var result = false
     var user = await userModel.findOne({token: req.body.token})
-
+    
     if(user != null){
-      user.portofoliosId.splice(req.params.position,1)
+      user.portofoliosId.splice(req.body.position,1)
       // utilisation des params pour renvoyer la position du portofolioId
       // à supprimer dans le tableau.
 
       var userSave = await user.save()
-
+      
       if(userSave.username){
         result = true
       }
@@ -169,7 +169,7 @@ router.post('/sign-up', async (req, res) => {
   // Affichage des portefeuilles actif ou passif en front
   router.post('/strategy', async (req, res) => {
     var strategyData = await portofolioModel.find({ strategy: req.body.strategy })
-    console.log(strategyData)
+    // console.log(strategyData)
     // req.query.stratgy provenant du SELECT(input)
     // retour de 3 schémas ==> ACTIVE / PASSIVE
 
@@ -188,7 +188,7 @@ router.post('/sign-up', async (req, res) => {
   router.get('/portofolio', async (req, res) => {
 
     var portofolios = []
-    console.log("name portefeuille :", req.query.name)
+    // console.log("name portefeuille :", req.query.name)
     var portofolio = await portofolioModel.findOne({name: req.query.name})
     // var portofolio = await portofolioModel.findOne({name: "60/40"})
     // req.query.name provenant du nom du portefeuille sélectionné
