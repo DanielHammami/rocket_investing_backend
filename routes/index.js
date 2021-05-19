@@ -121,24 +121,36 @@ router.post('/sign-up', async (req, res) => {
   router.post('/wishlist', async function(req, res){
     var result = false
     var userName;
+    var isValid = false
     // console.log(req.body.token)
     // console.log(req.body._idFront)
 
     var user = await userModel.findOne({token: req.body.token})
 
     if(user != null){
-      user.portofoliosId.push({_id: req.body._idFront})
-      // _id = objectId du portefeuille sélectionné
-      var userSave = await user.save()
-      // console.log("userSave :", userSave)
 
-      if(userSave.username){
-        result = true
-        userName = userSave.username
+      for (let i=0; i<user.portofoliosId.length; i++){
+        console.log("user.portofoliosId[i]", user.portofoliosId[i])
+        if(req.body._idFront == user.portofoliosId[i]){
+          isValid = true
+        }
       }
+      
+      if(!isValid) {
+        user.portofoliosId.push({_id: req.body._idFront})
+        // _id = objectId du portefeuille sélectionné
+        var userSave = await user.save()
+        // console.log("userSave :", userSave)
+  
+        if(userSave.username){
+          result = true
+          userName = userSave.username
+        }
+      }
+
     }
 
-    res.json({result, userName})
+    res.json({result, userName, isValid})
   })
 
   // # effacer un document
