@@ -188,8 +188,9 @@ router.post('/sign-up', async (req, res) => {
   router.get('/portofolio', async (req, res) => {
 
     var portofolios = []
-    // var portofolio = await portofolioModel.findOne({name: req.query.name})
-    var portofolio = await portofolioModel.findOne({name: "60/40"})
+    console.log("name portefeuille :", req.query.name)
+    var portofolio = await portofolioModel.findOne({name: req.query.name})
+    // var portofolio = await portofolioModel.findOne({name: "60/40"})
     // req.query.name provenant du nom du portefeuille sélectionné
     // console.log("portofolio:", portofolio)
 
