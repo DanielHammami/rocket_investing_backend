@@ -84,7 +84,7 @@ router.post('/sign-up', async (req, res) => {
         }
 
       } else {
-        error.push('email incorrect')
+        error.push('utilisateur déjà présent')
       }
     }
 
@@ -130,7 +130,7 @@ router.post('/sign-up', async (req, res) => {
     if(user != null){
 
       for (let i=0; i<user.portofoliosId.length; i++){
-        console.log("user.portofoliosId[i]", user.portofoliosId[i])
+        // console.log("user.portofoliosId[i]", user.portofoliosId[i])
         if(req.body._idFront == user.portofoliosId[i]){
           isValid = true
         }
