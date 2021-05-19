@@ -90,17 +90,17 @@ router.post('/sign-up', async (req, res) => {
 
     res.json({result, user, error, token})
   });
-  
+
   // ------------------------------ Wishlist ------------------------------ //
-  // find(+ filtre par le token) en BDD 
+  // find(+ filtre par le token) en BDD
   // Affichage des portefeuilles en front
   router.get('/wishlist', async (req, res) => {
     var result = false
-    var username; 
+    var username;
     var portofolios = "Aucun portefeuille enregistré"
     var user = await userModel.findOne({token: req.query.token})
-    console.log("--------------------------User:-----------------------------", user.portofoliosId)
-    
+    //console.log("--------------------------User:-----------------------------", user.portofoliosId)
+
     if(user != null){
       username = user.username
 
@@ -110,9 +110,9 @@ router.post('/sign-up', async (req, res) => {
                                               .exec()
         // populate() pour lire les propriétés de portofoliosId
         result = true
-      } 
+      }
     }
-  
+
     res.json({portofolios, result, username}) // pour affichage des portefeuilles dans "Mes favoris"
   })
 
@@ -168,8 +168,19 @@ router.post('/sign-up', async (req, res) => {
   // find(filtre stratégie: active ou passive) en BDD
   // Affichage des portefeuilles actif ou passif en front
   router.post('/strategy', async (req, res) => {
-    var strategyData = await portofolioModel.find({ strategy: req.body.strategy })
-    console.log(strategyData)
+    var strategyFomFrontend = req.body.strategy
+    var profilFromFrontend = req.body.profilType
+
+    var strategyData = await portofolioModel.find({ strategy: strategyFomFrontend })
+    var strategyName = []
+    //console.log('strategy => ', strategyFomFrontend)
+    console.log('profil => ', profilFromFrontend)
+
+    for (var i = 0; i < strategyData.length; i += 1) {
+      //console.log('name => ', strategyData)
+    }
+
+    //console.log(strategyData)
     // req.query.stratgy provenant du SELECT(input)
     // retour de 3 schémas ==> ACTIVE / PASSIVE
 
@@ -188,7 +199,7 @@ router.post('/sign-up', async (req, res) => {
   router.get('/portofolio', async (req, res) => {
 
     var portofolios = []
-    console.log("name portefeuille :", req.query.name)
+    //console.log("name portefeuille :", req.query.name)
     var portofolio = await portofolioModel.findOne({name: req.query.name})
     // var portofolio = await portofolioModel.findOne({name: "60/40"})
     // req.query.name provenant du nom du portefeuille sélectionné
@@ -208,7 +219,7 @@ router.post('/sign-up', async (req, res) => {
 
 router.get('/introduction', async function(req, res){
   var result = false
-  var username;  
+  var username;
   // console.log("--------------------------req.query.token:-----------------------------", req.query.token)
   var user = await userModel.findOne({token: req.query.token})
 
