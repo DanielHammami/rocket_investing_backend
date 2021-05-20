@@ -84,7 +84,7 @@ router.post('/sign-up', async (req, res) => {
         }
 
       } else {
-        error.push('utilisateur déjà présent')
+        error.push('utilisateur inconnu')
       }
     }
 
