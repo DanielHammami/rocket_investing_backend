@@ -122,8 +122,6 @@ router.post('/sign-up', async (req, res) => {
     var result = false
     var userName;
     var isValid = false
-    // console.log(req.body.token)
-    // console.log(req.body._idFront)
 
     var user = await userModel.findOne({token: req.body.token})
 
@@ -135,13 +133,13 @@ router.post('/sign-up', async (req, res) => {
           isValid = true
         }
       }
-      
+
       if(!isValid) {
         user.portofoliosId.push({_id: req.body._idFront})
         // _id = objectId du portefeuille sélectionné
         var userSave = await user.save()
         // console.log("userSave :", userSave)
-  
+
         if(userSave.username){
           result = true
           userName = userSave.username
@@ -158,14 +156,14 @@ router.post('/sign-up', async (req, res) => {
   router.delete('/wishlist', async function(req,res){
     var result = false
     var user = await userModel.findOne({token: req.body.token})
-    
+
     if(user != null){
       user.portofoliosId.splice(req.body.position,1)
       // utilisation des params pour renvoyer la position du portofolioId
       // à supprimer dans le tableau.
 
       var userSave = await user.save()
-      
+
       if(userSave.username){
         result = true
       }
@@ -185,6 +183,16 @@ router.post('/sign-up', async (req, res) => {
       strategy: strategyFomFrontend,
       risk: profilFromFrontend
     })
+
+    console.log('strategyData => ', strategyData)
+
+    var profilName = []
+
+    var name = await portofolioModel.find({
+      strategy: strategyFomFrontend,
+    })
+
+    console.log('name => ', name)
 
     var data = strategyData[0].name
 
