@@ -180,23 +180,21 @@ router.post('/sign-up', async (req, res) => {
     var profilFromFrontend = req.body.profil
 
     var strategyData = await portofolioModel.find({
-      strategy: strategyFomFrontend,
-      risk: profilFromFrontend
+      strategy: strategyFomFrontend
     })
 
-    console.log('strategyData => ', strategyData)
+    var data = strategyData
 
+    // get wallet name
     var profilName = []
 
-    var name = await portofolioModel.find({
-      strategy: strategyFomFrontend,
-    })
+    for (var i = 0; i < strategyData.length; i += 1) {
+      profilName.push(strategyData[i].name)
+    }
 
-    console.log('name => ', name)
+    //console.log('profilName => ', profilName)
 
-    var data = strategyData[0].name
-
-    res.json({ data })
+    res.json({ profilName })
   })
 
   // ------------------------------- Portofolio ------------------------------- //
