@@ -72,7 +72,7 @@ router.post('/sign-up', async (req, res) => {
     }
 
     if(error.length == 0){
-      user = await userModel.findOne({username: req.body.usernameFromFront,})
+    const user = await userModel.findOne({username: req.body.usernameFromFront,})
 
       if(user){
         if(bcrypt.compareSync(req.body.passwordFromFront, user.password)){
